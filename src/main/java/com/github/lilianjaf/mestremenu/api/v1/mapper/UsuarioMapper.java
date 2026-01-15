@@ -4,6 +4,7 @@ import com.github.lilianjaf.mestremenu.api.v1.dto.request.UsuarioRequest;
 import com.github.lilianjaf.mestremenu.api.v1.dto.response.EnderecoResponse;
 import com.github.lilianjaf.mestremenu.api.v1.dto.response.UsuarioResponse;
 import com.github.lilianjaf.mestremenu.domain.model.Endereco;
+import com.github.lilianjaf.mestremenu.domain.model.TipoUsuario;
 import com.github.lilianjaf.mestremenu.domain.model.Usuario;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,11 @@ public class UsuarioMapper {
         usuario.setEmail(request.getEmail());
         usuario.setLogin(request.getLogin());
         usuario.setSenha(request.getSenha());
-        usuario.setTipo(request.getTipo());
+        if (request.isDonoDeRestaurante()) {
+            usuario.setTipo(TipoUsuario.DONO_DE_RESTAURANTE);
+        } else {
+            usuario.setTipo(TipoUsuario.CLIENTE);
+        }
 
         if (request.getEndereco() != null) {
             Endereco endereco = new Endereco();

@@ -18,18 +18,19 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
+    private final UsuarioValidator usuarioValidator;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, 
+                          PasswordEncoder passwordEncoder, UsuarioValidator usuarioValidator) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
         this.passwordEncoder = passwordEncoder;
+        this.usuarioValidator = usuarioValidator;
     }
 
     @Transactional
     public UsuarioResponse cadastrar(UsuarioRequest usuarioRequest) {
-        if (usuarioRepository.existsByEmail(usuarioRequest.getEmail())) {
-            throw new NegocioException(String.format("Já existe um usuário cadastrado com o e-mail %s", usuarioRequest.getEmail()));
-        }
+        usuarioValidator.validar(usuarioRequest);
 
         Usuario usuario = usuarioMapper.toEntity(usuarioRequest);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));

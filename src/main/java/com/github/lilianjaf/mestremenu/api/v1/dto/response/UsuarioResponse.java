@@ -1,5 +1,6 @@
 package com.github.lilianjaf.mestremenu.api.v1.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.lilianjaf.mestremenu.domain.model.TipoUsuario;
 import java.time.LocalDateTime;
 
@@ -11,6 +12,8 @@ public class UsuarioResponse {
     private String login;
     private TipoUsuario tipo;
     private EnderecoResponse endereco;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataUltimaAlteracao;
 
     public Long getId() {

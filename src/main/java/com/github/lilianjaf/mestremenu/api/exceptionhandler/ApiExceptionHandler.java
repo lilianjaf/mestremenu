@@ -10,10 +10,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private record Field(String name, String userMessage) {}
 
     @ExceptionHandler(BadCredentialsException.class)
     public ProblemDetail handleBadCredentials(BadCredentialsException ex, WebRequest request) {
@@ -36,16 +39,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        
-        String detail = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage()))
-                .collect(Collectors.joining(", "));
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        List<Field> fields = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> new Field(error.getField(), error.getDefaultMessage()))
+                .collect(Collectors.toList());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.");
         problemDetail.setTitle("Dados inválidos");
         problemDetail.setType(URI.create("https://mestremenu.com.br/erros/dados-invalidos"));
+        problemDetail.setProperty("fields", fields);
+
         ex.printStackTrace();
-        
+
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 }

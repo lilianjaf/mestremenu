@@ -11,8 +11,8 @@ public class UsuarioRequest {
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
-    @NotBlank(message = "Email é obrigatório")
-    @Email
+    @NotBlank(message = "E-mail é obrigatório")
+    @Email(message = "E-mail deve ser um endereço de e-mail")
     private String email;
 
     @NotBlank(message = "Login é obrigatório")
@@ -21,11 +21,10 @@ public class UsuarioRequest {
     @NotBlank(message = "Senha é obrigatória")
     private String senha;
 
-    @NotNull
     private TipoUsuario tipo;
 
     @Valid
-    @NotNull
+    @NotNull(message = "Endereço é obrigatório")
     private EnderecoRequest endereco;
 
     public String getNome() {
@@ -74,5 +73,9 @@ public class UsuarioRequest {
 
     public void setEndereco(EnderecoRequest endereco) {
         this.endereco = endereco;
+    }
+
+    public boolean isDonoDeRestaurante() {
+        return tipo == TipoUsuario.DONO_DE_RESTAURANTE;
     }
 }
