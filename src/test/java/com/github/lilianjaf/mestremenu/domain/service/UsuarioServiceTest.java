@@ -16,6 +16,10 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -66,6 +70,31 @@ public class UsuarioServiceTest extends BaseTest {
 
         assertThrows(NegocioException.class, () -> usuarioService.cadastrar(request));
         verify(usuarioRepository, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar por campo não suportado")
+    void deveLancarExcecaoAoBuscarPorCampoNaoSuportado() {
+        Map<String, String[]> params = new HashMap<>();
+        params.put("email", new String[]{"joao@teste.com"});
+
+        NegocioException exception = assertThrows(NegocioException.class, () -> 
+                usuarioService.buscarPorNome(null, params));
+        
+        assertEquals("O único parâmetro de busca permitido é 'nome'", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deve buscar por nome com sucesso quando parâmetros são válidos")
+    void deveBuscarPorNomeComSucesso() {
+        Map<String, String[]> params = new HashMap<>();
+        params.put("nome", new String[]{"João"});
+
+        when(usuarioRepository.findByNomeContainingIgnoreCase("João")).thenReturn(Collections.emptyList());
+
+        usuarioService.buscarPorNome("João", params);
+
+        verify(usuarioRepository, times(1)).findByNomeContainingIgnoreCase("João");
     }
 
     private UsuarioRequest criarUsuarioRequest() {

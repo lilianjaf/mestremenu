@@ -68,6 +68,20 @@ public class UsuarioValidationIntegracaoTest {
     }
 
     @Test
+    @DisplayName("Deve cadastrar um usuário com sucesso")
+    void deveCadastrarUsuarioComSucesso() throws Exception {
+        UsuarioRequest request = criarUsuarioRequest();
+        request.setLogin("novo_usuario_2");
+        request.setEmail("novo2@teste.com");
+
+        mockMvc.perform(post("/api/v1/usuarios")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists());
+    }
+
+    @Test
     @DisplayName("Deve retornar 201 e o formato correto da data de última alteração")
     void deveRetornar201EFormatoDataCorreto() throws Exception {
         UsuarioRequest request = criarUsuarioRequest();

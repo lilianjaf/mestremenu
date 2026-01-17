@@ -27,6 +27,18 @@ public class UsuarioRequest {
     @NotNull(message = "Endereço é obrigatório")
     private EnderecoRequest endereco;
 
+    public boolean isDonoDeRestaurante() {
+        return tipo == TipoUsuario.DONO_DE_RESTAURANTE;
+    }
+
+    public void setDonoDeRestaurante(boolean donoDeRestaurante) {
+        if (donoDeRestaurante) {
+            this.tipo = TipoUsuario.DONO_DE_RESTAURANTE;
+        } else if (this.tipo == null) {
+            this.tipo = TipoUsuario.CLIENTE;
+        }
+    }
+
     public String getNome() {
         return nome;
     }
@@ -73,9 +85,5 @@ public class UsuarioRequest {
 
     public void setEndereco(EnderecoRequest endereco) {
         this.endereco = endereco;
-    }
-
-    public boolean isDonoDeRestaurante() {
-        return tipo == TipoUsuario.DONO_DE_RESTAURANTE;
     }
 }

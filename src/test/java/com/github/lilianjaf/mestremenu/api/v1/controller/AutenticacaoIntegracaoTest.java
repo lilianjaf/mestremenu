@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -101,6 +102,21 @@ public class AutenticacaoIntegracaoTest {
         mockMvc.perform(post("/api/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.detail", is("Login ou senha inválidos")));
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao autenticar com login inexistente")
+    void deveFalharComLoginInexistente() throws Exception {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setLogin("inexistente");
+        loginRequest.setSenha("123");
+
+        mockMvc.perform(post("/api/v1/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.detail", is("Login ou senha inválidos")));
     }
 }

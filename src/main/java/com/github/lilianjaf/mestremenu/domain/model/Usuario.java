@@ -1,7 +1,6 @@
 package com.github.lilianjaf.mestremenu.domain.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -32,9 +31,8 @@ public class Usuario {
     @Embedded
     private Endereco endereco;
 
-    @UpdateTimestamp
     @Column(name = "data_ultima_alteracao")
-    private LocalDateTime dataUltimaAlteracao = LocalDateTime.now();
+    private LocalDateTime dataUltimaAlteracao;
 
     private Boolean ativo = true;
 

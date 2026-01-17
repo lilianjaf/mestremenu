@@ -1,6 +1,7 @@
 package com.github.lilianjaf.mestremenu.api.v1.mapper;
 
 import com.github.lilianjaf.mestremenu.api.v1.dto.request.UsuarioRequest;
+import com.github.lilianjaf.mestremenu.api.v1.dto.request.UsuarioUpdateRequest;
 import com.github.lilianjaf.mestremenu.api.v1.dto.response.EnderecoResponse;
 import com.github.lilianjaf.mestremenu.api.v1.dto.response.UsuarioResponse;
 import com.github.lilianjaf.mestremenu.domain.model.Endereco;
@@ -36,6 +37,45 @@ public class UsuarioMapper {
         }
 
         return usuario;
+    }
+
+    public void copyToEntity(UsuarioUpdateRequest request, Usuario usuario) {
+        if (request.getNome() != null) {
+            usuario.setNome(request.getNome());
+        }
+        if (request.getEmail() != null) {
+            usuario.setEmail(request.getEmail());
+        }
+        if (request.getTipo() != null) {
+            usuario.setTipo(request.getTipo());
+        }
+
+        if (request.getEndereco() != null) {
+            if (usuario.getEndereco() == null) {
+                usuario.setEndereco(new Endereco());
+            }
+            if (request.getEndereco().getLogradouro() != null) {
+                usuario.getEndereco().setLogradouro(request.getEndereco().getLogradouro());
+            }
+            if (request.getEndereco().getNumero() != null) {
+                usuario.getEndereco().setNumero(request.getEndereco().getNumero());
+            }
+            if (request.getEndereco().getComplemento() != null) {
+                usuario.getEndereco().setComplemento(request.getEndereco().getComplemento());
+            }
+            if (request.getEndereco().getBairro() != null) {
+                usuario.getEndereco().setBairro(request.getEndereco().getBairro());
+            }
+            if (request.getEndereco().getCidade() != null) {
+                usuario.getEndereco().setCidade(request.getEndereco().getCidade());
+            }
+            if (request.getEndereco().getCep() != null) {
+                usuario.getEndereco().setCep(request.getEndereco().getCep());
+            }
+            if (request.getEndereco().getUf() != null) {
+                usuario.getEndereco().setUf(request.getEndereco().getUf());
+            }
+        }
     }
 
     public UsuarioResponse toResponse(Usuario usuario) {
