@@ -75,12 +75,6 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public UsuarioResponse buscarPorLogin(String login) {
-        return usuarioRepository.findByLogin(login)
-                .map(usuarioMapper::toResponse)
-                .orElseThrow(CredenciaisInvalidasException::new);
-    }
-
     @Transactional
     public UsuarioResponse atualizar(String login, UsuarioUpdateRequest usuarioUpdateRequest) {
         Usuario usuario = usuarioRepository.findByLogin(login)

@@ -1,6 +1,5 @@
 package com.github.lilianjaf.mestremenu.api.v1.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.lilianjaf.mestremenu.domain.model.TipoUsuario;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -27,19 +26,6 @@ public class UsuarioRequest {
     @Valid
     @NotNull(message = "Endereço é obrigatório")
     private EnderecoRequest endereco;
-
-    @JsonIgnore
-    public boolean isDonoDeRestaurante() {
-        return tipo == TipoUsuario.DONO_DE_RESTAURANTE;
-    }
-
-    public void setDonoDeRestaurante(boolean donoDeRestaurante) {
-        if (donoDeRestaurante) {
-            this.tipo = TipoUsuario.DONO_DE_RESTAURANTE;
-        } else if (this.tipo == null) {
-            this.tipo = TipoUsuario.CLIENTE;
-        }
-    }
 
     public String getNome() {
         return nome;

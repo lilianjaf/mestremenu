@@ -18,8 +18,9 @@ public class UsuarioMapper {
         usuario.setEmail(request.getEmail());
         usuario.setLogin(request.getLogin());
         usuario.setSenha(request.getSenha());
-        if (request.isDonoDeRestaurante()) {
-            usuario.setTipo(TipoUsuario.DONO_DE_RESTAURANTE);
+        
+        if (request.getTipo() != null) {
+            usuario.setTipo(request.getTipo());
         } else {
             usuario.setTipo(TipoUsuario.CLIENTE);
         }
