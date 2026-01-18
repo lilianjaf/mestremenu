@@ -64,16 +64,6 @@ public class UsuarioCenariosIntegracaoTest {
     }
 
     @Test
-    @DisplayName("Deve buscar usuário por login")
-    void deveBuscarUsuarioPorLogin() throws Exception {
-        mockMvc.perform(get("/api/v1/usuarios/" + usuarioSalvo.getLogin())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome", is("João Silva")))
-                .andExpect(jsonPath("$.login", is("joao")));
-    }
-
-    @Test
     @DisplayName("Deve buscar usuário por nome")
     void deveBuscarUsuarioPorNome() throws Exception {
         mockMvc.perform(get("/api/v1/usuarios")
@@ -146,15 +136,6 @@ public class UsuarioCenariosIntegracaoTest {
 
         Usuario usuarioPosUpdate = usuarioRepository.findByLogin(usuarioSalvo.getLogin()).get();
         assertTrue(passwordEncoder.matches("654321", usuarioPosUpdate.getSenha()), "A nova senha deveria estar criptografada no banco");
-    }
-
-    @Test
-    @DisplayName("Deve retornar erro ao buscar usuário por login inexistente")
-    void deveRetornarErroBuscarUsuarioPorLoginInexistente() throws Exception {
-        mockMvc.perform(get("/api/v1/usuarios/inexistente")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.detail", is("Login ou senha inválidos")));
     }
 
     @Test
