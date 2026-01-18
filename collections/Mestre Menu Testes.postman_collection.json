@@ -1,0 +1,1235 @@
+{
+	"info": {
+		"_postman_id": "a02656b5-dbdc-4173-ab88-1b0a94eaf4ed",
+		"name": "Mestre Menu Testes",
+		"description": "Coleção do Mestre Menu",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51456633",
+		"_collection_link": "https://lilianjaf-a6429169-5766243.postman.co/workspace/Lilian-Ferreira's-Workspace~6fb41077-ed84-4dda-811e-7caa3fd93e45/collection/51456633-a02656b5-dbdc-4173-ab88-1b0a94eaf4ed?action=share&source=collection_link&creator=51456633"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains token or user object\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.any.keys(\"token\", \"accessToken\", \"user\", \"login\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"login\": \"admin\",\n  \"senha\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cadastro funcional",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201 Created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains user fields: id, login, email\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"id\");",
+							"    pm.expect(jsonData).to.have.property(\"login\");",
+							"    pm.expect(jsonData).to.have.property(\"email\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@uol.com.br\",\n  \"login\": \"joao_silva\",\n  \"senha\": \"senha123\",\n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"123\",\n    \"complemento\": \"Apto 101\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-000\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "cadastro email duplicado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 or 409 (duplicate email)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Já existe um usuário cadastrado com o e-mail\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Vasconcelos Silva\",\n  \"email\": \"joao@uol.com.br\",\n  \"login\": \"joaosilvavas\",\n  \"senha\": \"senha1234\",\n  \"endereco\": {\n    \"logradouro\": \"Rua das Cerejas\",\n    \"numero\": \"14\",\n    \"complemento\": \"Casa 02\",\n    \"bairro\": \"Vila Mariana\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01340-000\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "cadastro login duplicado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 or 409 (duplicate login)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Já existe um usuário cadastrado com o login\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João dos Santos\",\n  \"email\": \"joaonovo@teste.com.br\",\n  \"login\": \"joao_silva\",\n  \"senha\": \"2344\",\n  \"endereco\": {\n    \"logradouro\": \"Rua Paraíso\",\n    \"numero\": \"89\",\n    \"complemento\": \"Apto 322\",\n    \"bairro\": \"Vila Madalena\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-012\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "cadastro faltando campos obrigatorios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 (missing required fields)\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"nome\": \"Juliana Alfredo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "cadastro enviando campo desconhecido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 (unknown field)\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"O corpo da requisição contém uma propriedade desconhecida:\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Joana Oliveira\",\n  \"email\": \"joana@outlook.com\",\n  \"login\": \"joaninha\",\n  \"senha\": \"abacaxi\",\n  \"telefone\": \"1197354823\",\n  \"endereco\": {\n    \"logradouro\": \"Rua Neto da Silva\",\n    \"numero\": \"455\",\n    \"complemento\": \"Apto 101\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-330\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "busca por nome",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response is an array of results\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"array\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios?nome=jo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					],
+					"query": [
+						{
+							"key": "nome",
+							"value": "jo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "busca por nome sem parametro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 400 (missing parameter)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "busca por nome campo desconhecido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 (unknown field)\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"O único parâmetro de busca permitido é 'nome'\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios?telefone=1234563445",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios"
+					],
+					"query": [
+						{
+							"key": "telefone",
+							"value": "1234563445"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "alterar senha funcional",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 204\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+							"});",
+							"",
+							"if (pm.response.code === 200) {",
+							"    pm.test(\"Content-Type header contains application/json\", function () {",
+							"        pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"    });",
+							"",
+							"    pm.test(\"Response is valid JSON\", function () {",
+							"        pm.response.to.be.json;",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senhaAtual\": \"senha123\",\n  \"novaSenha\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva/senha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva",
+						"senha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "alterar senha login invalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Login ou senha inválidos\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senhaAtual\": \"1234\",\n  \"novaSenha\": \"1234senha\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joaova/senha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joaova",
+						"senha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "alterar senha dados vazios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senhaAtual\": \"\",\n  \"novaSenha\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva/senha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva",
+						"senha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "alterar senha senha invalida",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Login ou senha inválidos\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senhaAtual\": \"senha123\",\n  \"novaSenha\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva/senha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva",
+						"senha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "alterar senha faltando campos obrigatorios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Um ou mais campos estão inválidos.\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senhaAtual\": \"senha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva/senha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva",
+						"senha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "atualização de cadastro funcional",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva Oliveira\",\n  \"email\": \"joao@gmail.com\",\n  \"endereco\": {\n    \"logradouro\": \"Rua Aviao\",\n    \"numero\": \"667\",\n    \"complemento\": \"Apto 101\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-000\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joaosilva_",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joaosilva_"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "atualização de cadastro login invalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Usuário não encontrado\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Silvana Giovana\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/logininexistente",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"logininexistente"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "atualização de cadastro email duplicado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Já existe um usuário cadastrado com o e-mail\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva Oliveira\",\n  \"email\": \"maria.oliveira@email.com\",\n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"123\",\n    \"complemento\": \"Apto 101\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-000\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "atualização de cadastro campo desconhecido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"O corpo da requisição contém uma propriedade desconhecida:\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva Oliveira\",\n  \"email\": \"joao@teste2.com.br\",\n  \"telefone\": \"1182374938\",  \n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"123\",\n    \"complemento\": \"Apto 101\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-000\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "excluir cadastro login invalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Content-Type header contains application/problem+json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/problem+json\");",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response contains error message\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).contain(\"Usuário não encontrado\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva Oliveira\",\n  \"email\": \"joao@teste2.com.br\",\n  \"telefone\": \"1182374938\",  \n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"123\",\n    \"complemento\": \"Apto 101\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"cep\": \"01000-000\",\n    \"uf\": \"SP\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/logininvalido",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"logininvalido"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "excluir cadastro funcional",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/usuarios/joao_silva",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"joao_silva"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": null,
+							"disabled": true
+						}
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZXN0cmUtbWVudS1hcGkiLCJzdWIiOiJhZG1pbiIsImV4cCI6MTc2ODcxMjMyNX0.TkfK1p9Hs5o59ScRzBM3_bm3O_j80nxpsHbSv9Uicis",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
