@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/usuarios/{login}/senha")
-public class UsuarioSenhaController {
+public class UsuarioSenhaController implements UsuarioSenhaControllerOpenApi {
 
     private final UsuarioService usuarioService;
 
@@ -16,6 +16,7 @@ public class UsuarioSenhaController {
         this.usuarioService = usuarioService;
     }
 
+    @Override
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alterarSenha(@PathVariable String login, @RequestBody @Valid SenhaUpdateRequest senhaUpdateDto) {

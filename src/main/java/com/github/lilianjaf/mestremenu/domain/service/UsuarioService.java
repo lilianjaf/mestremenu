@@ -9,6 +9,7 @@ import com.github.lilianjaf.mestremenu.domain.exception.CredenciaisInvalidasExce
 import com.github.lilianjaf.mestremenu.domain.exception.NegocioException;
 import com.github.lilianjaf.mestremenu.domain.model.Usuario;
 import com.github.lilianjaf.mestremenu.domain.repository.UsuarioRepository;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,10 +96,10 @@ public class UsuarioService {
     @Transactional
     public void alterarSenha(String login, SenhaUpdateRequest senhaUpdateDto) {
         Usuario usuario = usuarioRepository.findByLogin(login)
-                .orElseThrow(CredenciaisInvalidasException::new);
+                .orElseThrow(() ->new BadCredentialsException("Login ou senha inválidos"));
 
         if (!passwordEncoder.matches(senhaUpdateDto.getSenhaAtual(), usuario.getSenha())) {
-            throw new CredenciaisInvalidasException();
+            throw new BadCredentialsException("Login ou senha inválidos");
         }
 
         usuario.setSenha(passwordEncoder.encode(senhaUpdateDto.getNovaSenha()));

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController("usuarioControllerV1")
 @RequestMapping("/api/v1/usuarios")
-public class UsuarioController {
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     private final UsuarioService usuarioService;
 
@@ -21,27 +21,26 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse cadastrar(@RequestBody @Valid UsuarioRequest usuarioRequest) {
         return usuarioService.cadastrar(usuarioRequest);
     }
 
+    @Override
     @GetMapping
     public List<UsuarioResponse> buscarPorNome(@RequestParam(required = false) String nome, HttpServletRequest request) {
         return usuarioService.buscarPorNome(nome, request.getParameterMap());
     }
 
-    @GetMapping("/{login}")
-    public UsuarioResponse buscarPorLogin(@PathVariable String login) {
-        return usuarioService.buscarPorLogin(login);
-    }
-
+    @Override
     @PatchMapping("/{login}")
     public UsuarioResponse atualizar(@PathVariable String login, @RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
         return usuarioService.atualizar(login, usuarioUpdateRequest);
     }
 
+    @Override
     @DeleteMapping("/{login}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable String login) {

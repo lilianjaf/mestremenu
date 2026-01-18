@@ -11,11 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/login")
-public class AutenticacaoController {
+public class AutenticacaoController implements AutenticacaoControllerOpenApi {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
@@ -25,6 +26,7 @@ public class AutenticacaoController {
         this.tokenService = tokenService;
     }
 
+    @Override
     @PostMapping
     public TokenResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getSenha());
