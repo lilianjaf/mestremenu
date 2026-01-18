@@ -1,10 +1,10 @@
 # Mestre Menu - Ecossistema de Gestão Compartilhada
 
-O ecossistema de gestão compartilhada para o grupo **Mestre Menu** visa centralizar as operações em uma plataforma única e robusta, permitindo que os restaurantes reduzam custos e priorizem a excelência gastronômica através de uma infraestrutura escalável e moderna baseada em Docker e PostgreSQL.
+O ecossistema de gestão compartilhada para o grupo **Mestre Menu** visa centralizar as operações em uma plataforma única, permitindo que os restaurantes reduzam custos e priorizem a excelência gastronômica através de uma infraestrutura escalável e moderna utilizando Docker e PostgreSQL.
 
 ## Descrição
 
-O Mestre Menu é uma API RESTful de alta maturidade sob o ecossistema Spring, fundamentada nos princípios SOLID e em uma implementação de Programação Orientada a Objetos para garantir uma arquitetura extensível, segura e de fácil manutenção.
+O Mestre Menu é uma API RESTful sob o ecossistema Spring, fundamentada nos princípios SOLID e em uma implementação de Programação Orientada a Objetos para garantir uma arquitetura extensível, segura e de fácil manutenção.
 
 ## Tecnologias Utilizadas
 
@@ -92,7 +92,7 @@ O sistema atualmente conta com as seguintes capacidades:
     - Tratamento de exceções global com retornos padronizados (**RFC 7807 - Problem Details**).
     - Migrações automatizadas de banco de dados via Flyway.
 
-## 🧪 Testes
+## Testes
 
 Para executar a suíte de testes (unitários e de integração):
 ```bash
