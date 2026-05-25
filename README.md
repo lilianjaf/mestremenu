@@ -6,7 +6,7 @@ O ecossistema de gestão compartilhada para o grupo **Mestre Menu** visa central
 
 O Mestre Menu é uma API RESTful sob o ecossistema Spring, fundamentada nos princípios SOLID e em uma implementação de Programação Orientada a Objetos para garantir uma arquitetura extensível, segura e de fácil manutenção.
 
-## Tecnologias Utilizadas
+## Tecnologias Utilizadas  
 
 - **Java 21**: Linguagem principal para aproveitamento dos recursos mais recentes.
 - **Spring Boot 3.4.1**: Framework base para a construção da API.
